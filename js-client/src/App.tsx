@@ -8,14 +8,16 @@ const AuthableApp = () => {
 
     const login = (ev: FormEvent) => {
         ev.preventDefault()
-        auth.login()
+        // @ts-ignore
+        const {username, password} = ev.target.elements
+        auth.login({username: username.value, password: password.value})
     }
 
     return (<>
         {auth.user.authenticated ?
-            <div className="App">
+            <main>
                 <UserList/>
-            </div>
+            </main>
             : <form onSubmit={login}>
                 <input name='username' value={'test'}/>
                 <input name='password' value={'test'}/>

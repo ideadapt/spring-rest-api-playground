@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -24,9 +26,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     lateinit var dataSource: DataSource
 
-	@Autowired
-	lateinit var authEntryPoint: RestAuthenticationEntryPoint
+	var authEntryPoint: HttpStatusEntryPoint = HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
 
+	//see https://github.com/eugenp/tutorials/blob/master/spring-security-rest/src/main/java/org/baeldung/security/SecurityJavaConfig.java
 	@Autowired
 	lateinit var successHandler: AuthSuccessHandler
 

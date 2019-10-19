@@ -1,7 +1,7 @@
 package org.signcollector.server
 
-import org.springframework.http.HttpEntity
-import org.springframework.http.ResponseEntity
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -20,7 +20,7 @@ class UserController(private val users: UserRepository) {
     }
 
     @GetMapping("/")
-    fun index(): HttpEntity<String> {
-        return ResponseEntity.status(200).body("")
+    fun index(): JsonNode {
+        return JsonNodeFactory.instance.nullNode()
     }
 }

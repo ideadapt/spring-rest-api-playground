@@ -14,19 +14,21 @@ class AuthSuccessHandler : SimpleUrlAuthenticationSuccessHandler() {
 	var requestCache = HttpSessionRequestCache()
 
 	override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
-		val savedRequest: SavedRequest? = requestCache.getRequest(request, response);
+		val savedRequest: SavedRequest? = requestCache.getRequest(request, response)
+
+		response.writer.append("{ \"status\": \"ok\" }")
 
 		if (savedRequest == null) {
-			clearAuthenticationAttributes(request);
-			return;
+			clearAuthenticationAttributes(request)
+			return
 		}
-		val targetUrlParameter = getTargetUrlParameter();
+		val targetUrlParameter = getTargetUrlParameter()
 		if (isAlwaysUseDefaultTargetUrl() || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
-			requestCache.removeRequest(request, response);
-			clearAuthenticationAttributes(request);
-			return;
+			requestCache.removeRequest(request, response)
+			clearAuthenticationAttributes(request)
+			return
 		}
 
-		clearAuthenticationAttributes(request);
+		clearAuthenticationAttributes(request)
 	}
 }

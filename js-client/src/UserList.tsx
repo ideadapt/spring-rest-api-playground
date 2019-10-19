@@ -1,16 +1,11 @@
 import React, {useEffect, useState} from "react";
+import callServer from "./CallServer";
 
 const UserList: React.FC = () => {
     let [users, setUsers] = useState([])
 
     useEffect(() => {
-        fetch('http://localhost:9090/users').then(async (res) => {
-            if(res.status === 401){
-                // show login form
-            } else {
-                setUsers(await res.json())
-            }
-        });
+        callServer('users').then(setUsers);
     }, [])
 
     return (
