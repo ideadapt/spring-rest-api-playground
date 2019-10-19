@@ -8,13 +8,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import javax.sql.DataSource
+
 
 @Configuration
 @EnableWebSecurity
@@ -23,16 +24,33 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     lateinit var dataSource: DataSource
 
-    @Throws(Exception::class)
+	@Autowired
+	lateinit var authEntryPoint: RestAuthenticationEntryPoint
+
+	@Autowired
+	lateinit var successHandler: AuthSuccessHandler
+
+	val failureHandler = SimpleUrlAuthenticationFailureHandler()
+
+	@Throws(Exception::class)
     override fun configure(security: HttpSecurity) {
-        security.authorizeRequests()
+        security.cors()
+				.and()
+				.authorizeRequests()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authEntryPoint)
+				.and()
+				.authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
                     .antMatchers(HttpMethod.GET, "/users").hasRole("USER")
                     .antMatchers("/").permitAll()
-                    .anyRequest().authenticated()
+				.and()
+                .httpBasic().disable()
+                .formLogin().successHandler(successHandler).failureHandler(failureHandler)
                 .and()
-                .httpBasic()
-                .and().logout().disable()
+				.logout()
+                .and()
                 .csrf().disable()
     }
 

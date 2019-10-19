@@ -5,7 +5,11 @@ const UserList: React.FC = () => {
 
     useEffect(() => {
         fetch('http://localhost:9090/users').then(async (res) => {
-            setUsers(await res.json())
+            if(res.status === 401){
+                // show login form
+            } else {
+                setUsers(await res.json())
+            }
         });
     }, [])
 
