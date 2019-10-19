@@ -1,7 +1,9 @@
 package org.signcollector.server
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -22,5 +24,13 @@ class UserController(private val users: UserRepository) {
     @GetMapping("/")
     fun index(): JsonNode {
         return JsonNodeFactory.instance.nullNode()
+    }
+
+    @GetMapping("/session")
+    fun session(session: Authentication?): JsonNode {
+        if(session == null){
+            return JsonNodeFactory.instance.objectNode()
+        }
+        return ObjectMapper().readTree(ObjectMapper().writeValueAsString(session))
     }
 }

@@ -5,7 +5,7 @@ const UserList: React.FC = () => {
     let [users, setUsers] = useState([])
 
     useEffect(() => {
-        callServer('users').then(setUsers);
+        callServer({endpoint: 'users'}).then(setUsers);
     }, [])
 
     return (

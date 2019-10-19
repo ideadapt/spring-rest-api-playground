@@ -4,8 +4,8 @@ import UserList from "./UserList";
 import {AuthProvider, useAuth} from "./AuthContext";
 
 const AuthableApp = () => {
-    const auth = useAuth() as { user: { authenticated: boolean }, login: any, logout: any }
-
+    const auth = useAuth() as { session: { authenticated: boolean }, login: any, logout: any }
+    console.log(auth)
     const login = (ev: FormEvent) => {
         ev.preventDefault()
         // @ts-ignore
@@ -14,7 +14,7 @@ const AuthableApp = () => {
     }
 
     return (<>
-        {auth.user.authenticated ?
+        {auth.session.authenticated ?
             <main>
                 <UserList/>
             </main>
