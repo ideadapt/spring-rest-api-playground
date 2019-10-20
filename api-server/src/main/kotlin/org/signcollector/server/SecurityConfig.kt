@@ -18,21 +18,20 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import javax.sql.DataSource
 
-
 @Configuration
 @EnableWebSecurity
 class SecurityConfig : WebSecurityConfigurerAdapter() {
 
-    @Autowired
-    lateinit var dataSource: DataSource
-
-	var authEntryPoint: HttpStatusEntryPoint = HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
+	var authEntryPoint = HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
+	var logoutSuccessHandler = LogoutSuccessHandler()
+	val failureHandler = SimpleUrlAuthenticationFailureHandler()
 
 	//see https://github.com/eugenp/tutorials/blob/master/spring-security-rest/src/main/java/org/baeldung/security/SecurityJavaConfig.java
 	@Autowired
 	lateinit var successHandler: AuthSuccessHandler
 
-	val failureHandler = SimpleUrlAuthenticationFailureHandler()
+	@Autowired
+    lateinit var dataSource: DataSource
 
 	@Throws(Exception::class)
     override fun configure(security: HttpSecurity) {
@@ -51,14 +50,14 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .httpBasic().disable()
                 .formLogin().successHandler(successHandler).failureHandler(failureHandler)
                 .and()
-				.logout()
+				.logout().logoutSuccessHandler(logoutSuccessHandler)
                 .and()
                 .csrf().disable()
     }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        return NoOpPasswordEncoder.getInstance();
+        return NoOpPasswordEncoder.getInstance()
     }
 
     @Bean

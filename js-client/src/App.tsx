@@ -5,7 +5,7 @@ import {AuthProvider, useAuth} from "./AuthContext";
 
 const AuthableApp = () => {
     const auth = useAuth() as { session: { authenticated: boolean }, login: any, logout: any }
-    console.log(auth)
+
     const login = (ev: FormEvent) => {
         ev.preventDefault()
         // @ts-ignore
@@ -13,11 +13,18 @@ const AuthableApp = () => {
         auth.login({username: username.value, password: password.value})
     }
 
+    const logout = () => {
+        auth.logout()
+    }
+
     return (<>
         {auth.session.authenticated ?
-            <main>
-                <UserList/>
-            </main>
+            <div>
+                <header><button onClick={logout}>logout</button></header>
+                <main>
+                    <UserList/>
+                </main>
+            </div>
             : <form onSubmit={login}>
                 <input name='username' value={'test'}/>
                 <input name='password' value={'test'}/>
