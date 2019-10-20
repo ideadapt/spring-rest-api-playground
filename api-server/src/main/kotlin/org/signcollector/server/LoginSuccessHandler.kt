@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class AuthSuccessHandler : SimpleUrlAuthenticationSuccessHandler() {
+class LoginSuccessHandler : SimpleUrlAuthenticationSuccessHandler() {
 
 	override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
 		response.writer.append("{ \"status\": \"ok\" }")
